@@ -26,18 +26,19 @@ fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, res) => 
 });
 
 mkdir(path.join(__dirname, 'project-dist', 'assets'), {recursive: true});
-function moveAssets(destination) {
-  readdir(destination, {withFileTypes: true}).then(res => {
+function deleteAssets(dest) {
+  readdir(dest, {withFileTypes: true}).then(res => {
     res.forEach(el => {
       if (el.isDirectory()) {
-        moveAssets(path.join(destination, el.name));
+        deleteAssets(path.join(dest, el.name));
       } else {
-        unlink(path.join(destination, el.name)); 
+        unlink(path.join(dest, el.name)); 
       } 
     });
   });
 }
-moveAssets(path.join(__dirname, 'project-dist', 'assets'));
+
+deleteAssets(path.join(__dirname, 'project-dist', 'assets'));
 
 function copyAssets(src, dest) {
   readdir(src, {withFileTypes: true}).then(res => {
@@ -51,4 +52,5 @@ function copyAssets(src, dest) {
     });
   });
 }
+
 copyAssets(path.join(__dirname, 'assets'), path.join(__dirname, 'project-dist', 'assets'));
